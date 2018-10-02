@@ -84,27 +84,11 @@ namespace HaxRaspi_Server.Services
         #endregion
         #region Private Methods
 
-        //private bool Delete(int id)
-        //{
-        //    try
-        //    {
-        //        var iface = _dataContext.Interfaces.Find(id);
-        //        _dataContext.Interfaces.Remove(iface);
-        //        _dataContext.SaveChanges();
-        //        return true;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return false;
-        //    }
-        //}
-
         private Interface CheckTimeSpans(Interface iface)
         {
-            // If ExpirationTimeSpan has passed, dont return
+            // If ExpirationTimeSpan has passed, but state was not yet disconnected, dont return and update
             if ((DateTimeOffset.Now - iface.Updated).TotalMinutes > _expirationTimeSpan.TotalMinutes)
             {
-                //Delete(iface.Id);
                 iface.Connected = false;
                 iface = Update(iface);
                 return null;
@@ -126,7 +110,6 @@ namespace HaxRaspi_Server.Services
             {
                 var oldIface = _dataContext.Interfaces.Find(iface.Id);
                 if (oldIface == null) return null;
-                iface.Updated = DateTimeOffset.Now;
                 _dataContext.Entry(oldIface).CurrentValues.SetValues(iface);
                 _dataContext.SaveChanges();
                 return iface;
