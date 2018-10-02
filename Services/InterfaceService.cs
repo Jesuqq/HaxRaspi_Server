@@ -16,8 +16,8 @@ namespace HaxRaspi_Server.Services
     public class InterfaceService : IInterfaceService
     {
         private DataContext _dataContext;
-        private TimeSpan _disconnectedTimeSpan = new TimeSpan(0, 0, 15);
-        private TimeSpan _expirationTimeSpan = new TimeSpan(0, 0, 30);
+        private TimeSpan _disconnectedTimeSpan = new TimeSpan(0, 0, 30);
+        private TimeSpan _expirationTimeSpan = new TimeSpan(24, 0, 0);
 
         #region Public Methods
         public InterfaceService(DataContext dataContext)
