@@ -8,7 +8,6 @@ namespace HaxRaspi_Server.Entities {
         public string Broadcast { get; set; }
         public string IPv6 { get; set; }
         public string MAC { get; set; }
-        public bool Connected { get; set; }
         public DateTimeOffset Updated { get; set; }
     }
 }

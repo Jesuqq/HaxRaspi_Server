@@ -16,7 +16,6 @@ namespace HaxRaspi_Server.Services
     public class InterfaceService : IInterfaceService
     {
         private DataContext _dataContext;
-        private TimeSpan _disconnectedTimeSpan = new TimeSpan(0, 0, 30);
         private TimeSpan _expirationTimeSpan = new TimeSpan(24, 0, 0);
 
         #region Public Methods
@@ -33,7 +32,6 @@ namespace HaxRaspi_Server.Services
             if (existingIface != null)
             {
                 existingIface.Broadcast = iface.Broadcast;
-                existingIface.Connected = iface.Connected;
                 existingIface.IP = iface.IP;
                 existingIface.IPv6 = iface.IPv6;
                 existingIface.MAC = iface.MAC;
@@ -86,21 +84,12 @@ namespace HaxRaspi_Server.Services
 
         private Interface CheckTimeSpans(Interface iface)
         {
-            // If ExpirationTimeSpan has passed, but state was not yet disconnected, dont return and update
+            // Dont return if ExpirationTimeSpan has passed
             if ((DateTimeOffset.Now - iface.Updated).TotalMinutes > _expirationTimeSpan.TotalMinutes)
             {
-                iface.Connected = false;
-                iface = Update(iface);
                 return null;
             }
 
-            // If DisconnectedTimeSpan has passed, set connected flag to false and update
-            if (((DateTimeOffset.Now - iface.Updated).TotalMinutes > _disconnectedTimeSpan.TotalMinutes) && iface.Connected)
-            {
-                iface.Connected = false;
-                iface = Update(iface);
-                return iface;
-            }
             return iface;
         }
 
